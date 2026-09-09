@@ -23,9 +23,7 @@ import { Role, Property } from "@servicenow/sdk/core";
 // admin account. See the Security Checklist in /backend for why.
 export const integrationRole = Role({
   name: "x_yourco_snhealth.integration",
-  description:
-    "Least-privilege role for the Service Health Dashboard's ServiceNow " +
-    "integration user - read/update incidents only.",
+  description: "Least-privilege role for the Service Health Dashboard's ServiceNow integration user - read/update incidents only.",
   containsRoles: ["itil"],
 });
 
@@ -33,12 +31,11 @@ export const integrationRole = Role({
 // password, or token in a Property - use the OAuth Application Registry
 // (created manually, see above) or the backend's own .env for those.
 export const dashboardBaseUrlProperty = Property({
+  $id: "dashboard-base-url",
   name: "x_yourco_snhealth.dashboard_base_url",
   type: "string",
   value: "",
-  description:
-    "Base URL of the Service Health Dashboard backend that connects to " +
-    "this instance. Informational only.",
+  description: "Base URL of the Service Health Dashboard backend that connects to this instance. Informational only.",
   roles: {
     read: ["admin", integrationRole],
     write: ["admin"],

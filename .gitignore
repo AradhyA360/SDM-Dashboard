@@ -37,6 +37,10 @@ pnpm-debug.log*
 dist/
 .vite/
 
+# ServiceNow SDK generated output
+.now/
+src/fluent/generated/
+
 # Local editor settings
 .idea/
 .vscode/*.local.json
