@@ -1,0 +1,42 @@
+# Operating system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Environment files and local secrets
+.env
+.env.*
+!.env.example
+
+# Python virtual environments and generated files
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local backend database and runtime cache
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+backend/storage/
+
+# Node.js dependencies and logs
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Frontend build and tool output
+dist/
+.vite/
+
+# Local editor settings
+.idea/
+.vscode/*.local.json

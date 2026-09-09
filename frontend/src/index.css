@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body {
+  font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { @apply bg-slate-300 dark:bg-slate-600 rounded-full; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Wrapped in @layer components so utility classes added alongside these on an
+   element (e.g. className="input-field pl-9") always win in the cascade, as
+   expected. Without this layer, these rules land after the utilities layer in
+   the compiled CSS purely due to source position, silently overriding any
+   utility meant to override them - that was the cause of the search icon and
+   placeholder text overlapping (pl-9 losing to input-field's own px-3.5). */
+@layer components {
+  .card {
+    @apply bg-white dark:bg-slate-800 rounded-xl2 shadow-soft border border-slate-200 dark:border-slate-700;
+  }
+
+  .btn-primary {
+    @apply bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg px-4 py-2.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-lg px-4 py-2.5 transition-colors;
+  }
+
+  .input-field {
+    @apply w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all placeholder:text-slate-400;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-slate-200 dark:bg-slate-700 rounded-lg;
+  }
+}
+
+/* ---------- Glassmorphism ---------- */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.glass-light {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.dark .glass-light {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ---------- Motion ---------- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.4s ease-out both; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 28s linear infinite; }
+.animate-marquee:hover { animation-play-state: paused; }
+
+@keyframes meshPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1) translate(0, 0); }
+  50% { opacity: 0.85; transform: scale(1.06) translate(2%, -2%); }
+}
+.animate-mesh { animation: meshPulse 10s ease-in-out infinite; }
+
+@keyframes slideFade {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-slide-fade { animation: slideFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee, .animate-mesh, .animate-fade-in-up, .animate-slide-fade {
+    animation: none !important;
+  }
+}
+
+/* ---------- Recharts interactive polish ---------- */
+.recharts-wrapper { cursor: default; }
+.recharts-default-tooltip {
+  border-radius: 12px !important;
+  border: none !important;
+  box-shadow: 0 12px 32px -8px rgba(0,0,0,0.25) !important;
+}
+.recharts-pie-sector, .recharts-bar-rectangle, .recharts-dot {
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}

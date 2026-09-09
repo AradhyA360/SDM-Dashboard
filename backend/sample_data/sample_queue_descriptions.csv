@@ -1,0 +1,14 @@
+Queue,Description,TCS
+ABAP Team,"SAP ABAP custom development, code-level fixes, and program debugging.",TCS
+Access Management Team,"Role provisioning, lockout recovery, permission corrections, and joiner/mover/leaver access changes.",Non TCS
+Core Banking L3,"Third-line core-banking specialists for account setup delays, onboarding workflows, and ledger posting defects.",Non TCS
+FI Team,"Finance module configuration, GL/AP/AR issues, and financial reporting fixes.",TCS
+L1 Service Desk,"Front-line service desk handling password resets, access requests, and initial incident logging for all business units.",Non TCS
+L1 Team,"First point of contact triage, basic troubleshooting, and ticket categorization before any specialist routing.",Non TCS
+L2 Team,Deeper technical investigation for issues escalated from L1 that need more diagnosis.,Non TCS
+L3 Team,"Highest-tier non-TCS escalation, root cause analysis, and complex cross-system issues.",Non TCS
+MM Team,"Materials Management module support, procurement, and inventory issues.",TCS
+Payments L2 Support,"Second-line support for payment rails, batch posting failures, SWIFT rejections, and payment-gateway timeouts.",Non TCS
+Risk & Compliance Ops,"Risk engine, sanctions screening, KYC document flows, and compliance false-positive investigations.",TCS
+SD Team,"Sales and Distribution module support, order-to-cash issues, and pricing configuration.",TCS
+Trade Support L2,"Trade booking, amendment sync, market-data feeds, and post-trade reconciliation support.",TCS
