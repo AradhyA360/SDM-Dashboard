@@ -1,0 +1,19 @@
+{
+  "name": "x_yourco_snhealth",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ServiceNow Fluent SDK app for the Service Health Dashboard integration (least-privilege role + config for the FastAPI backend in /backend to use). See README.md > ServiceNow Integration.",
+  "scripts": {
+    "auth": "now-sdk auth --add https://dev375971.service-now.com --type oauth --alias dev375971",
+    "init": "now-sdk init",
+    "build": "now-sdk build",
+    "install:instance": "now-sdk install --auth dev375971",
+    "fetch": "now-sdk fetch --auth dev375971"
+  },
+  "dependencies": {
+    "@servicenow/sdk": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

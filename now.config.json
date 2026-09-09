@@ -1,0 +1,7 @@
+{
+  "scope": "x_yourco_snhealth",
+  "scopeId": "00000000000000000000000000000000",
+  "name": "Service Health Dashboard Integration",
+  "description": "ServiceNow-side companion app for the Service Health Dashboard (FastAPI backend in /backend). Defines the least-privilege role and non-secret config the integration uses - see the ServiceNow Integration section of the README before building/installing.",
+  "active": true
+}

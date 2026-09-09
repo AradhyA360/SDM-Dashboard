@@ -46,11 +46,11 @@ class Settings:
     SERVICENOW_INSTANCE_URL: str = os.getenv("SERVICENOW_INSTANCE_URL", "")  # e.g. https://dev375971.service-now.com
     SERVICENOW_TABLE: str = os.getenv("SERVICENOW_TABLE", "incident")
 
-    # "oauth" (recommended for anything beyond a quick local POC) or "basic".
-    # Basic Auth is kept only because ServiceNow PDIs support it out of the
-    # box for fast local testing - the Security Checklist for this
-    # integration calls for OAuth 2.0 on any production-facing connection.
-    SERVICENOW_AUTH_MODE: str = os.getenv("SERVICENOW_AUTH_MODE", "basic")
+    # "oauth" (recommended, and the default) or "basic". Basic Auth is kept
+    # only because ServiceNow PDIs support it out of the box for fast local
+    # testing - the Security Checklist for this integration calls for
+    # OAuth 2.0 on any production-facing connection.
+    SERVICENOW_AUTH_MODE: str = os.getenv("SERVICENOW_AUTH_MODE", "oauth")
 
     # Basic Auth credentials (POC only - never commit real values).
     SERVICENOW_USERNAME: str = os.getenv("SERVICENOW_USERNAME", "")

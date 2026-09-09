@@ -242,25 +242,69 @@ Copy `.env.example` to `.env` in `backend/` and fill in:
 ```bash
 SERVICENOW_INSTANCE_URL=https://dev375971.service-now.com
 SERVICENOW_TABLE=incident
-SERVICENOW_AUTH_MODE=basic   # or "oauth" — see below
+SERVICENOW_AUTH_MODE=oauth   # default — "basic" is available for quick local testing only
+SERVICENOW_OAUTH_CLIENT_ID=...
+SERVICENOW_OAUTH_CLIENT_SECRET=...
 SERVICENOW_USERNAME=...
 SERVICENOW_PASSWORD=...
 ```
 
-**Basic Auth** (`SERVICENOW_USERNAME`/`SERVICENOW_PASSWORD`) is the fastest way to get going
-against your own PDI. **OAuth 2.0** is the recommended mode for anything beyond a quick local
-test:
+**OAuth 2.0 is the default and recommended mode** — this is what the Security Checklist for this
+integration calls for on anything beyond a quick local test:
 
 1. On the instance, go to **System OAuth → Application Registry → New → Create an OAuth API
    endpoint for external clients**. Note the generated Client ID/Secret.
-2. Set `SERVICENOW_AUTH_MODE=oauth` and fill in `SERVICENOW_OAUTH_CLIENT_ID`,
-   `SERVICENOW_OAUTH_CLIENT_SECRET`, plus the same `SERVICENOW_USERNAME`/`SERVICENOW_PASSWORD`
-   (used for the password grant). The backend fetches and caches the access token in memory only
-   — it's never written to disk or logged, and is refreshed automatically before it expires.
+2. Fill in `SERVICENOW_OAUTH_CLIENT_ID`, `SERVICENOW_OAUTH_CLIENT_SECRET`, plus
+   `SERVICENOW_USERNAME`/`SERVICENOW_PASSWORD` (used for the password grant — ideally a dedicated
+   integration account with the `x_yourco_snhealth.integration` role from the Fluent app below,
+   not a personal admin login). The backend fetches and caches the access token in memory only —
+   it's never written to disk or logged, and is refreshed automatically before it expires.
 3. Restart the backend, then check `GET /servicenow/status` (Admin only) to confirm it's
    reachable — this never returns credentials or tokens, only status.
 4. If this backend runs behind a corporate firewall/proxy, make sure outbound access to the
    instance URL is whitelisted.
+
+Need to fall back to Basic Auth for a quick local test instead? Set `SERVICENOW_AUTH_MODE=basic`
+and just fill in `SERVICENOW_USERNAME`/`SERVICENOW_PASSWORD` — skip the OAuth Application Registry
+step above.
+
+### Fluent app — making this repo pickable by the ServiceNow IDE
+
+This repo also includes a small **ServiceNow Fluent SDK** app at its root (`now.config.json`,
+`package.json`, `tsconfig.json`, `src/fluent/`) — the ServiceNow-side companion to the FastAPI
+backend above. Cloning this repo from **ServiceNow IDE → Git: Clone** (or Studio's "Import from
+source control") requires `now.config.json` and `package.json` in the repo's base directory; this
+is what makes the clone succeed instead of failing with "No fluent app found".
+
+It currently defines:
+
+- **`integrationRole`** — a least-privilege role (`x_yourco_snhealth.integration`, containing only
+  `itil`) to grant the dedicated integration account from Phase 2, instead of using a personal
+  admin login.
+- **`dashboardBaseUrlProperty`** — a non-secret system property recording where the dashboard
+  backend lives. Nothing secret is ever defined here — the OAuth Application Registry (client
+  ID/secret) is created by hand in Phase 2 above on purpose, since a client secret is something
+  the platform generates, not something that belongs in source-controlled code.
+
+The placeholder `scope` (`x_yourco_snhealth`) and `scopeId` (32 zeros) in `now.config.json` need to
+become real before you can build/install this against `dev375971`:
+
+```bash
+npm install
+npx @servicenow/sdk auth --add https://dev375971.service-now.com --type oauth --alias dev375971
+npx @servicenow/sdk init   # run inside this directory; pick a real scope, e.g. x_<your-vendor-prefix>_snhealth
+```
+
+`init` detects the existing project and updates `scope`/`scopeId` in `now.config.json` to match
+what it creates on the instance (don't hand-edit a `scopeId` yourself — it must match a real
+`sys_scope` record). If you rename the scope away from `x_yourco_snhealth`, also update the
+`x_yourco_snhealth.*` names inside `src/fluent/index.now.ts` and the property name in Phase 2's
+`.env` note to match. Once that's done:
+
+```bash
+npm run build              # compiles src/fluent into dist/app
+npm run install:instance   # installs it onto dev375971
+```
 
 ### Phase 3 — Pull incidents in / push resolutions back
 
@@ -282,7 +326,7 @@ Both sync and resolution-push are restricted to Admin/SDM accounts, same as file
 
 ### Security notes
 
-- Prefer OAuth 2.0 over Basic Auth for anything beyond local testing.
+- OAuth 2.0 is the default mode — only fall back to Basic Auth for quick local testing.
 - Use a dedicated integration account with only the roles it needs (`itil` is enough to read/update
   incidents) rather than a personal admin login.
 - Never commit real credentials — `.env` is gitignored; only `.env.example` (with blank secrets)
