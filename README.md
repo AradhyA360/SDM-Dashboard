@@ -242,15 +242,16 @@ Copy `.env.example` to `.env` in `backend/` and fill in:
 ```bash
 SERVICENOW_INSTANCE_URL=https://dev375971.service-now.com
 SERVICENOW_TABLE=incident
-SERVICENOW_AUTH_MODE=oauth   # default — "basic" is available for quick local testing only
+SERVICENOW_AUTH_MODE=basic   # default — set to "oauth" to opt into OAuth 2.0
 SERVICENOW_OAUTH_CLIENT_ID=...
 SERVICENOW_OAUTH_CLIENT_SECRET=...
 SERVICENOW_USERNAME=...
 SERVICENOW_PASSWORD=...
 ```
 
-**OAuth 2.0 is the default and recommended mode** — this is what the Security Checklist for this
-integration calls for on anything beyond a quick local test:
+Basic Auth is the default because it works with a ServiceNow PDI without creating an OAuth
+application first. For shared or production-facing connections, OAuth 2.0 is available as an
+explicit opt-in:
 
 1. On the instance, go to **System OAuth → Application Registry → New → Create an OAuth API
    endpoint for external clients**. Note the generated Client ID/Secret.
@@ -264,9 +265,8 @@ integration calls for on anything beyond a quick local test:
 4. If this backend runs behind a corporate firewall/proxy, make sure outbound access to the
    instance URL is whitelisted.
 
-Need to fall back to Basic Auth for a quick local test instead? Set `SERVICENOW_AUTH_MODE=basic`
-and just fill in `SERVICENOW_USERNAME`/`SERVICENOW_PASSWORD` — skip the OAuth Application Registry
-step above.
+For the default Basic Auth setup, leave `SERVICENOW_AUTH_MODE=basic` and fill in
+`SERVICENOW_USERNAME`/`SERVICENOW_PASSWORD` — skip the OAuth Application Registry step above.
 
 ### Fluent app — making this repo pickable by the ServiceNow IDE
 
@@ -326,7 +326,8 @@ Both sync and resolution-push are restricted to Admin/SDM accounts, same as file
 
 ### Security notes
 
-- OAuth 2.0 is the default mode — only fall back to Basic Auth for quick local testing.
+- Basic Auth is the default mode for local/PDI setup; use OAuth 2.0 as an explicit opt-in for
+  shared or production-facing connections.
 - Use a dedicated integration account with only the roles it needs (`itil` is enough to read/update
   incidents) rather than a personal admin login.
 - Never commit real credentials — `.env` is gitignored; only `.env.example` (with blank secrets)

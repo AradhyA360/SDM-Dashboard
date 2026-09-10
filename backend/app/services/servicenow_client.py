@@ -10,8 +10,9 @@ a confusing connection error when the integration hasn't been set up yet.
 
 Security notes (see the project's Pre-Production Security & Compliance
 Checklist):
-  - OAuth 2.0 (password grant) is supported and recommended for anything
-    beyond a quick local POC; Basic Auth is kept only for fast PDI testing.
+    - Basic Auth is the default for straightforward local/PDI setup. OAuth 2.0
+        (password grant) is available as an explicit opt-in for shared or
+        production-facing connections.
   - Credentials/tokens are read from environment variables (app/config.py)
     and are never logged or persisted to disk. The OAuth access token is
     cached in-process only, and re-fetched once it's within 60s of expiry.
